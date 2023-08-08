@@ -30,7 +30,7 @@ export async function registerPost(req, res) {
         // cripitografas a senha 
         const passwordsafe = bcrypt.hashSync(password, 2);
 
-        let query = 'INSERT INTO users (name,email,password) VALUES ($1, $2, $3) ';
+        let query = 'INSERT INTO users (name,email,password,cpf,phone) VALUES ($1, $2, $3, $4, $5) ';
         const queryParams = [];
 
         // Verificando os parâmetros enviados pela query são validos
