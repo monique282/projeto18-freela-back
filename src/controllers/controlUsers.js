@@ -57,14 +57,14 @@ export async function registerPost(req, res) {
 
         // verificando se o cpf é valido
         if (typeof cpf !== 'undefined' && cpf !== '') {
-            queryParams.push(passwordsafe);
+            queryParams.push(cpf);
         } else {
             return res.status(422).send({ message: "Formato de senha invalido." });
         };
 
         // verificando se o phone é valido
         if (typeof phone !== 'undefined' && phone !== '') {
-            queryParams.push(passwordsafe);
+            queryParams.push(phone);
         } else {
             return res.status(422).send({ message: "Formato de senha invalido." });
         };
