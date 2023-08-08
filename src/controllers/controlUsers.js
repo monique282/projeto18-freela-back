@@ -55,6 +55,20 @@ export async function registerPost(req, res) {
             return res.status(422).send({ message: "Formato de senha invalido." });
         };
 
+        // verificando se o cpf é valido
+        if (typeof cpf !== 'undefined' && cpf !== '') {
+            queryParams.push(passwordsafe);
+        } else {
+            return res.status(422).send({ message: "Formato de senha invalido." });
+        };
+
+        // verificando se o phone é valido
+        if (typeof phone !== 'undefined' && phone !== '') {
+            queryParams.push(passwordsafe);
+        } else {
+            return res.status(422).send({ message: "Formato de senha invalido." });
+        };
+
         // enviar os dados pro servidor pra quando o cadastro der certo
         await postRequisitionRegisterSend(query, queryParams);
         return res.sendStatus(201);
