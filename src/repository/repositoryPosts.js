@@ -25,9 +25,9 @@ export async function postSendUrlsIdTableShortuser(idUser, idUrls) {
     return serveSend;
 };
 
-export async function getRequisitionUrlsId(id) {
-    const urlsResult = await db.query('SELECT * FROM urls WHERE id = $1;', [id]);
-    return urlsResult;
+export async function getRequisitionUsers(token) {
+    const userResult = await db.query('SELECT * FROM users WHERE token = $1;', [token]);
+    return userResult;
 };
 
 export async function getSendUrlsOpenUpdatVistirCount(visitCount, shortUrl) {

@@ -1,5 +1,12 @@
 import { nanoid } from 'nanoid';
-import { deleteRequisitionShortuserLink, deleteRequisitionUrlsId, deleteSendShortuserId, deleteSendUrlsId, getRequisitionUrlsId, getSendUrlsOpenUpdatVistirCount, postRequisitionUrlsIdTableUrls, postRequisitionUrlsIdTableUsers, postRequisitionValidateToken, postSendUrlsIdTableShortuser, postSendUrlsIdTableUsers } from '../repository/repositoryUrls.js';
+import {
+    deleteRequisitionShortuserLink, deleteRequisitionUrlsId,
+    deleteSendShortuserId, deleteSendUrlsId,
+    getRequisitionUsers, getSendUrlsOpenUpdatVistirCount,
+    postRequisitionUrlsIdTableUrls, postRequisitionUrlsIdTableUsers,
+    postRequisitionValidateToken, postSendUrlsIdTableShortuser,
+    postSendUrlsIdTableUsers
+} from '../repository/repositoryPosts.js';
 
 
 // função que para cadastrar uma url a encurtando, urls/short
@@ -43,20 +50,20 @@ export async function urlsPost(req, res) {
 }
 
 // função que pega a url pelo id urls/:id
-export async function urlsGet(req, res) {
-    const { id } = req.params;
+export async function postsGet(req, res) {
+    const { token } = req.params;
     try {
 
         // pegando a url peli id indicado
-        const urls = await getRequisitionUrlsId(id);
+        const post = await getRequisitionUsers(token);
 
-        // verificando se a ulr é valida
-        if (urls.rows.length === 0) {
-            return res.status(404).send("Url não valida");
+        // verificando se o usuario existe
+        if (post.rows.length === 0) {
+            return res.status(404).send("Usuario não logado");
         };
 
         // se tudo der certo
-        res.status(200).send({ "id": urls.rows[0].id, "shortUrl": urls.rows[0].shortUrl, "url": urls.rows[0].url })
+        res.sendStatus(200);
 
     } catch (erro) {
         res.status(500).send(erro.message);

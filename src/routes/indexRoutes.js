@@ -3,7 +3,7 @@
 
 import { Router } from "express";
 import userRouter from "./userRoutes.js";
-import urlRouter from "./urlRoutes.js";
+import postsRouter from "./postsRoutes.js";
 
 
 const router = Router()
@@ -12,8 +12,8 @@ router.use([
     // rota para os usuario
     userRouter,
 
-    // rotas das urls
-    urlRouter,
+    // rotas das posts
+    postsRouter,
 
 ]);
 

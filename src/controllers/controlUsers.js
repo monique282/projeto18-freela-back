@@ -30,7 +30,7 @@ export async function registerPost(req, res) {
         // cripitografas a senha 
         const passwordsafe = bcrypt.hashSync(password, 2);
 
-        let query = 'INSERT INTO users (name,email,password,cpf,phone) VALUES ($1, $2, $3, $4, $5) ';
+        let query = 'INSERT INTO users (name,email,cpf,phone,password) VALUES ($1, $2, $3, $4, $5) ';
         const queryParams = [];
 
         // Verificando os parâmetros enviados pela query são validos
@@ -48,13 +48,6 @@ export async function registerPost(req, res) {
             return res.status(422).send({ message: "Formato de email invalido." });
         };
 
-        // verificando se a senha é valida
-        if (typeof password !== 'undefined' && password !== '') {
-            queryParams.push(passwordsafe);
-        } else {
-            return res.status(422).send({ message: "Formato de senha invalido." });
-        };
-
         // verificando se o cpf é valido
         if (typeof cpf !== 'undefined' && cpf !== '') {
             queryParams.push(cpf);
@@ -65,6 +58,13 @@ export async function registerPost(req, res) {
         // verificando se o phone é valido
         if (typeof phone !== 'undefined' && phone !== '') {
             queryParams.push(phone);
+        } else {
+            return res.status(422).send({ message: "Formato de senha invalido." });
+        };
+
+        // verificando se a senha é valida
+        if (typeof password !== 'undefined' && password !== '') {
+            queryParams.push(passwordsafe);
         } else {
             return res.status(422).send({ message: "Formato de senha invalido." });
         };
