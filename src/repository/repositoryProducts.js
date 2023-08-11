@@ -7,6 +7,22 @@ export async function getRequisitionProducts() {
     return productsResult;
 };
 
+export async function postRequisitionProductIdTableProducts(id) {
+    const idProductsResult = await db.query('SELECT * FROM products WHERE "id" = $1;', [id]);
+    return idProductsResult;
+};
+
+export async function getSendProcustId(visitCount, shortUrl) {
+    const serveSend = await db.query(`UPDATE urls SET "visitCount" = $1 WHERE "shortUrl" = $2`, [visitCount , shortUrl])
+    return serveSend;
+};
+
+
+
+
+
+
+
 
 
 
@@ -27,20 +43,14 @@ export async function postSendUrlsIdTableUsers(shortUrl, url) {
     return serveSend;
 };
 
-export async function postRequisitionUrlsIdTableUrls(shortUrl) {
-    const idUrlsResult = await db.query('SELECT * FROM urls WHERE "shortUrl" = $1;', [shortUrl]);
-    return idUrlsResult;
-};
+
 
 export async function postSendUrlsIdTableShortuser(idUser, idUrls) {
     const serveSend = await db.query('INSERT INTO shortuser ( "userId" ,"shortId") VALUES ($1, $2)', [idUser, idUrls]);
     return serveSend;
 };
 
-export async function getSendUrlsOpenUpdatVistirCount(visitCount, shortUrl) {
-    const serveSend = await db.query(`UPDATE urls SET "visitCount" = $1 WHERE "shortUrl" = $2`, [visitCount , shortUrl])
-    return serveSend;
-};
+
 
 export async function deleteRequisitionUrlsId(id) {
     const usersResult = await db.query('SELECT * FROM users WHERE id = $1;', [id]);

@@ -2,11 +2,55 @@ import { nanoid } from 'nanoid';
 import {
     deleteRequisitionShortuserLink, deleteRequisitionUrlsId,
     deleteSendShortuserId, deleteSendUrlsId,
-    getRequisitionProducts, getSendUrlsOpenUpdatVistirCount,
-    postRequisitionUrlsIdTableUrls, postRequisitionUrlsIdTableUsers,
-    postRequisitionValidateToken, postSendUrlsIdTableShortuser,
-    postSendUrlsIdTableUsers
+    getRequisitionProducts, postRequisitionProductIdTableProducts,
+    postRequisitionUrlsIdTableUsers,postRequisitionValidateToken, 
+    postSendUrlsIdTableShortuser,postSendUrlsIdTableUsers
 } from '../repository/repositoryProducts.js';
+
+
+// função que pega todos os produtos
+export async function productsGet(req, res) {
+    try {
+
+        // pegando a url peli id indicado
+        const post = await getRequisitionProducts();
+
+        // verificando se o usuario existe
+        if (post.rows.length === 0) {
+            return res.status(404).send("Sem nenhuma postagem");
+        };
+
+        // se tudo der certo
+        res.status(200).send(post.rows);
+
+    } catch (erro) {
+        res.status(500).send(erro.message);
+    };
+}
+
+// função que mostra os detalhas de um produto pelo id
+export async function productsIdGet(req, res) {
+    const { id } = req.params;
+    
+    try {
+
+        // verificando se o short existe 
+        const thereIsId = await postRequisitionProductIdTableProducts(id);
+
+        // verificando se a thereIsId é valida
+        if (thereIsId.rows.length === 0) {
+            return res.status(404).send("Postagem não encontrada");
+        };
+
+        // se tudo der certo
+        // enviar a venda
+        return res.status(200).send(thereIsId.rows)
+
+    } catch (erro) {
+        res.status(500).send(erro.message);
+    };
+}
+
 
 
 // função que para cadastrar uma url a encurtando, urls/short
@@ -49,48 +93,7 @@ export async function urlsPost(req, res) {
     };
 }
 
-// função que pega a url pelo id urls/:id
-export async function productsGet(req, res) {
-    try {
 
-        // pegando a url peli id indicado
-        const post = await getRequisitionProducts();
-
-        // verificando se o usuario existe
-        if (post.rows.length === 0) {
-            return res.status(404).send("Sem nenhuma postagem");
-        };
-
-        // se tudo der certo
-        res.status(200).send(post.rows);
-
-    } catch (erro) {
-        res.status(500).send(erro.message);
-    };
-}
-
-// função que direciona pra urls espcifica urls/open/:shortUrl
-export async function urlsOpenGet(req, res) {
-    const { shortUrl } = req.params;
-    try {
-
-        // verificando se o short existe 
-        const shortForUrl = await postRequisitionUrlsIdTableUrls(shortUrl);
-
-        // verificando se a short é valida
-        if (shortForUrl.rows.length === 0) {
-            return res.status(404).send("Url não encontrada");
-        };
-
-        // se tudo der certo
-        // atualizando visitCount
-        await getSendUrlsOpenUpdatVistirCount(shortForUrl.rows[0].visitCount + 1, shortUrl)
-        res.redirect(shortForUrl.rows[0].url);
-
-    } catch (erro) {
-        res.status(500).send(erro.message);
-    };
-}
 
 // função que deleta pelo id urls/:id
 export async function urlsDelete(req, res) {
