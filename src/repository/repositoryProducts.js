@@ -1,5 +1,17 @@
 import { db } from '../database/database.connection.js';
 
+
+// pega a lista de produtos da planilha
+export async function getRequisitionProducts() {
+    const productsResult = await db.query('SELECT * FROM products;');
+    return productsResult;
+};
+
+
+
+
+
+
 export async function postRequisitionValidateToken(token) {
     const userLogeedResult = await db.query('SELECT * FROM userslogged WHERE token = $1;', [token]);
     return userLogeedResult;
@@ -23,11 +35,6 @@ export async function postRequisitionUrlsIdTableUrls(shortUrl) {
 export async function postSendUrlsIdTableShortuser(idUser, idUrls) {
     const serveSend = await db.query('INSERT INTO shortuser ( "userId" ,"shortId") VALUES ($1, $2)', [idUser, idUrls]);
     return serveSend;
-};
-
-export async function getRequisitionUsers(token) {
-    const userResult = await db.query('SELECT * FROM users WHERE token = $1;', [token]);
-    return userResult;
 };
 
 export async function getSendUrlsOpenUpdatVistirCount(visitCount, shortUrl) {

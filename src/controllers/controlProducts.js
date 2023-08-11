@@ -2,11 +2,11 @@ import { nanoid } from 'nanoid';
 import {
     deleteRequisitionShortuserLink, deleteRequisitionUrlsId,
     deleteSendShortuserId, deleteSendUrlsId,
-    getRequisitionUsers, getSendUrlsOpenUpdatVistirCount,
+    getRequisitionProducts, getSendUrlsOpenUpdatVistirCount,
     postRequisitionUrlsIdTableUrls, postRequisitionUrlsIdTableUsers,
     postRequisitionValidateToken, postSendUrlsIdTableShortuser,
     postSendUrlsIdTableUsers
-} from '../repository/repositoryPosts.js';
+} from '../repository/repositoryProducts.js';
 
 
 // função que para cadastrar uma url a encurtando, urls/short
@@ -50,20 +50,19 @@ export async function urlsPost(req, res) {
 }
 
 // função que pega a url pelo id urls/:id
-export async function postsGet(req, res) {
-    const { token } = req.params;
+export async function productsGet(req, res) {
     try {
 
         // pegando a url peli id indicado
-        const post = await getRequisitionUsers(token);
+        const post = await getRequisitionProducts();
 
         // verificando se o usuario existe
         if (post.rows.length === 0) {
-            return res.status(404).send("Usuario não logado");
+            return res.status(404).send("Sem nenhuma postagem");
         };
 
         // se tudo der certo
-        res.sendStatus(200);
+        res.status(200).send(post.rows);
 
     } catch (erro) {
         res.status(500).send(erro.message);
