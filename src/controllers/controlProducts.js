@@ -10,6 +10,7 @@ import {
 
 // função que pega todos os produtos
 export async function productsGet(req, res) {
+    
     try {
 
         // pegando a url peli id indicado

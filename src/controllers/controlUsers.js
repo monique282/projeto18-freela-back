@@ -5,7 +5,11 @@
 
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
-import { getRequisitionUserMe, getRequisitionUserMeValidationToken, postRequisitionLogin, postRequisitionLoginSend, postRequisitionRegister, postRequisitionRegisterSend } from '../repository/repositoryUsers.js';
+import {
+    getRequisitionUserProducts, postRequisitionLogin,
+    postRequisitionLoginSend, postRequisitionRegister,
+    postRequisitionRegisterSend
+} from '../repository/repositoryUsers.js';
 
 // essa função aqui serve para enviar um post para criar um cadastro
 export async function registerPost(req, res) {
@@ -111,24 +115,17 @@ export async function loginPost(req, res) {
 };
 
 // essa função aqui serve pra pegar as postagem que foi o usuario que fez users/me
-export async function userMeGet(req, res) {
-
-    // pegando os dados do token
-    const { authorization } = req.headers;
-    const token = authorization?.replace("Bearer ", "");
-
+export async function userProductsGet(req, res) {
+    const { idseler } = req.params;
     try {
-        // validando o token
-        const userLogged = await getRequisitionUserMe(token);
-        if (userLogged.rows.length === 0) {
-            return res.status(401).send({ message: "Usuário não autorizado." });
+        // validando o idseler
+        const userProducts = await getRequisitionUserProducts(idseler);
+        if (userProducts.rows.length === 0) {
+            return res.status(401).send({ message: "Dados do vendedor não encontrado." });
         };
 
-        // pegando os dados do usuário e suas urls somando o total de visitas e juntando tudo
-        const userData = await getRequisitionUserMeValidationToken(userLogged.rows[0].email);
-
         // se de tudo certo
-        return res.status(200).send(userData.rows[0]);
+        return res.status(200).send(userProducts.rows);
 
     } catch (error) {
         res.status(500).send(error.message);
