@@ -7,26 +7,28 @@ export async function getRequisitionProducts() {
     return productsResult;
 };
 
-export async function postRequisitionProductIdTableProducts(id) {
-    const idProductsResult = await db.query('SELECT * FROM products WHERE "id" = $1;', [id]);
+export async function getRequisitionProductIdTableProductsJoinUsers(id) {
+    const idProductsResult = await db.query(
+        `SELECT products.*, 
+            json_build_object('name', users.name, 'phone', users.phone) AS users
+                FROM products
+                JOIN users ON products.idseler = users.email
+        WHERE products.id = $1;
+                `, [id]);
     return idProductsResult;
 };
 
+
+
+
+
+
+
+
 export async function getSendProcustId(visitCount, shortUrl) {
-    const serveSend = await db.query(`UPDATE urls SET "visitCount" = $1 WHERE "shortUrl" = $2`, [visitCount , shortUrl])
+    const serveSend = await db.query(`UPDATE urls SET "visitCount" = $1 WHERE "shortUrl" = $2`, [visitCount, shortUrl])
     return serveSend;
 };
-
-
-
-
-
-
-
-
-
-
-
 
 export async function postRequisitionValidateToken(token) {
     const userLogeedResult = await db.query('SELECT * FROM userslogged WHERE token = $1;', [token]);

@@ -2,15 +2,16 @@ import { nanoid } from 'nanoid';
 import {
     deleteRequisitionShortuserLink, deleteRequisitionUrlsId,
     deleteSendShortuserId, deleteSendUrlsId,
-    getRequisitionProducts, postRequisitionProductIdTableProducts,
-    postRequisitionUrlsIdTableUsers,postRequisitionValidateToken, 
-    postSendUrlsIdTableShortuser,postSendUrlsIdTableUsers
+    getRequisitionProductIdTableProductsJoinUsers, getRequisitionProducts,
+    postRequisitionUrlsIdTableUsers, postRequisitionValidateToken,
+    postSendUrlsIdTableShortuser, postSendUrlsIdTableUsers
 } from '../repository/repositoryProducts.js';
+
 
 
 // função que pega todos os produtos
 export async function productsGet(req, res) {
-    
+
     try {
 
         // pegando a url peli id indicado
@@ -32,11 +33,11 @@ export async function productsGet(req, res) {
 // função que mostra os detalhas de um produto pelo id
 export async function productsIdGet(req, res) {
     const { id } = req.params;
-    
+
     try {
 
         // verificando se o short existe 
-        const thereIsId = await postRequisitionProductIdTableProducts(id);
+        const thereIsId = await getRequisitionProductIdTableProductsJoinUsers(id);
 
         // verificando se a thereIsId é valida
         if (thereIsId.rows.length === 0) {
@@ -45,6 +46,7 @@ export async function productsIdGet(req, res) {
 
         // se tudo der certo
         // enviar a venda
+        console.log(thereIsId.rows)
         return res.status(200).send(thereIsId.rows)
 
     } catch (erro) {
