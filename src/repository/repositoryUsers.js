@@ -1,14 +1,5 @@
 import { db } from '../database/database.connection.js';
 
-export async function getRequisitionUserProducts(idseler) {
-    const userProductsResult = await db.query('SELECT * FROM users WHERE email = $1;', [idseler]);
-    return userProductsResult;
-};
-
-
-
-
-
 export async function postRequisitionRegister(email) {
     const existingUserResult = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     return existingUserResult;
@@ -28,6 +19,22 @@ export async function postRequisitionLoginSend(name, email, token) {
     const existingUserResultSend = await db.query('INSERT INTO usersLogged (name,email,token) VALUES ($1, $2, $3)', [name, email, token]);
     return existingUserResultSend;
 };
+
+export async function getRequisitionUserProducts(idseler) {
+    const userProductsResult = await db.query('SELECT * FROM users WHERE email = $1;', [idseler]);
+    return userProductsResult;
+};
+
+
+
+
+
+
+
+
+
+
+
 
 
 export async function getRequisitionUserMeValidationToken(email) {
