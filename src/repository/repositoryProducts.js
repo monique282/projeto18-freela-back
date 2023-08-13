@@ -23,10 +23,18 @@ export async function postRequisitionValidateToken(token) {
     return userLogeedResult;
 };
 
-export async function deleteSendShortuserLoggedToken(token) {
+export async function deleteSendUserLoggedToken(token) {
     const serveSend = await db.query(`DELETE FROM userslogged WHERE "token" = $1;`, [token]);
     return serveSend;
 };
+
+export async function postSendProductsParamTableProducts(param) {
+    const serveSend = await db.query('SELECT * FROM products WHERE category = $1;', [param]);
+    return serveSend;
+};
+
+
+
 
 
 
@@ -49,10 +57,7 @@ export async function postRequisitionUrlsIdTableUsers(email) {
     return idUserResult;
 };
 
-export async function postSendUrlsIdTableUsers(shortUrl, url) {
-    const serveSend = await db.query('INSERT INTO urls ("shortUrl",url) VALUES ($1, $2)', [shortUrl, url]);
-    return serveSend;
-};
+
 
 
 
