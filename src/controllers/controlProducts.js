@@ -1,19 +1,15 @@
 import { nanoid } from 'nanoid';
 import {
-    deleteRequisitionShortuserLink, deleteRequisitionUrlsId,
-    deleteSendShortuserId, deleteSendUrlsId,
-    getRequisitionProductIdTableProductsJoinUsers, getRequisitionProducts,
-    postRequisitionUrlsIdTableUsers, postRequisitionValidateToken,
+    deleteSendShortuserLoggedToken, getRequisitionProductIdTableProductsJoinUsers,
+    getRequisitionProducts, postRequisitionUrlsIdTableUsers,
+    postRequisitionValidateToken,
     postSendUrlsIdTableShortuser, postSendUrlsIdTableUsers
 } from '../repository/repositoryProducts.js';
-
-
 
 // função que pega todos os produtos
 export async function productsGet(req, res) {
 
     try {
-
         // pegando a url peli id indicado
         const post = await getRequisitionProducts();
 
@@ -53,6 +49,37 @@ export async function productsIdGet(req, res) {
         res.status(500).send(erro.message);
     };
 }
+
+// função que deleta o usuario da tabele de usuario logado
+export async function usersLoggedDelete(req, res) {
+
+    // pegando os dados do token
+    const { authorization } = req.headers;
+    const token = authorization?.replace("Bearer ", "")
+
+    try {
+
+        // validando o token
+        const userLogeed = await postRequisitionValidateToken(token);
+        if (userLogeed.rows.length === 0) {
+            return res.status(401).send({ message: "Usuário não autorizado." });
+        };
+
+        // fazendo a requisição para deletar usuario logado da tabela 
+        await deleteSendShortuserLoggedToken(token);
+
+        // se tudo der certo
+        res.sendStatus(204);
+
+    } catch (erro) {
+        res.status(500).send(erro.message);
+    };
+}
+
+
+
+
+
 
 
 
@@ -98,51 +125,3 @@ export async function urlsPost(req, res) {
 
 
 
-// função que deleta pelo id urls/:id
-export async function urlsDelete(req, res) {
-
-    // pegando os dados do token
-    const { authorization } = req.headers;
-    const token = authorization?.replace("Bearer ", "")
-
-    // pegando o id 
-    const { id } = req.params;
-    try {
-
-        // validando o token
-        const userLogeed = await postRequisitionValidateToken(token);
-        if (userLogeed.rows.length === 0) {
-            return res.status(401).send({ message: "Usuário não autorizado." });
-        };
-
-        // verificando de o id existe
-        // pegando a url peli id indicado
-        const users = await deleteRequisitionUrlsId(id);
-
-        // verificando se a userslogged é valida
-        if (users.rows.length === 0) {
-            return res.status(404).send("Url não existe");
-        };
-
-        // pegando o usuario que é o mesmo que o usuario logado usando o email como parametro
-        const user = await postRequisitionUrlsIdTableUsers(userLogeed.rows[0].email);
-
-        // verificando se a pessoa que quer apagar é a dona do link
-        const shortUrl = await deleteRequisitionShortuserLink(user.rows[0].id, id);
-
-        // se não for
-        if (shortUrl.rows.length === 0) {
-            return res.status(401).send(" Não há autorização para deletar");
-        }
-
-        // fazendo a requisição para deletar a urls 
-        await deleteSendShortuserId(id);
-        await deleteSendUrlsId(id);
-
-        // se tudo der certo
-        res.sendStatus(204);
-
-    } catch (erro) {
-        res.status(500).send(erro.message);
-    };
-}
