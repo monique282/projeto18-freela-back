@@ -1,10 +1,12 @@
 import { nanoid } from 'nanoid';
 import {
-    deleteSendUserLoggedToken, getRequisitionProductIdTableProductsJoinUsers,
-    getRequisitionProducts, getRequisitionProductsUsers, getRequisitionValidateToken,
-    getSendProductsParamTableProducts, postRequisitionValidateToken
+    deleteSendUserLoggedToken, deleteSendproductsId, getRequisitionProductIdTableProductsJoinUsers,
+    getRequisitionProducts, getRequisitionProductsUsers, 
+    getRequisitionProductsUsersId, getRequisitionValidateToken,
+    getSendProductsParamTableProducts, postRequisitionValidateToken, 
+    sendSaleOpenUpdatStatusBreak, sendSaleOpenUpdatStatusUnpause
 } from '../repository/repositoryProducts.js';
-import { postRequisitionLogin } from '../repository/repositoryUsers.js';
+
 
 // função que pega todos os produtos
 export async function productsGet(req, res) {
@@ -96,31 +98,96 @@ export async function productCategoryPost(req, res) {
 
 // função que mostra os produto do usuario
 export async function productsSoldByUserGet(req, res) {
-    
+
     // pegando os dados do token
-     const { authorization } = req.headers;
-     const token = authorization?.replace("Bearer ", "")
+    const { authorization } = req.headers;
+    const token = authorization?.replace("Bearer ", "")
 
     try {
 
         // pegas as informações do usuario pelo token
         const thereIsAUserToken = await getRequisitionValidateToken(token);
 
-        // verificando se o usuario tem algum produto
-        if (thereIsAUserToken.rows.length === 0) {
-            return res.status(404).send("Nenhum produto cadastrado.");
-        };
+        // // verificando se o usuario tem algum produto
+        // if (thereIsAUserToken.rows.length === 0) {
+        //     return res.status(404).send("Nenhum produto cadastrado.");
+        // };
 
         // pegar as postagens que o usuario fez
         const userProducts = await getRequisitionProductsUsers(thereIsAUserToken.rows[0].email);
 
         // se tudo der certo
         // enviar a venda
-        return res.status(200).send(userProducts)
+        return res.status(200).send(userProducts.rows)
 
     } catch (erro) {
         res.status(500).send(erro.message);
     };
 }
 
+// função que pausa ou despausa a venda
+export async function pauseUnpauseSaleBreak(req, res) {
+    const { id } = req.params;
+    try {
 
+        // verificando se a venda existe 
+        const saleExists = await getRequisitionProductsUsersId(id);
+
+        // verificando se a short é valida
+        if (saleExists.rows.length === 0) {
+            return res.status(404).send("Venda não encontrada");
+        };
+
+        // se tudo der certo
+        // atualizando o status
+        await sendSaleOpenUpdatStatusBreak(id)
+        res.sendStatus(200);
+
+    } catch (erro) {
+        res.status(500).send(erro.message);
+    };
+};
+
+export async function pauseUnpauseSaleUnpause(req, res) {
+    const { id } = req.params;
+    try {
+
+        // verificando se a venda existe 
+        const saleExists = await getRequisitionProductsUsersId(id);
+
+        // verificando se a short é valida
+        if (saleExists.rows.length === 0) {
+            return res.status(404).send("Venda não encontrada");
+        };
+
+        // se tudo der certo
+        // atualizando o status
+        await sendSaleOpenUpdatStatusUnpause(id)
+        res.sendStatus(200);
+
+    } catch (erro) {
+        res.status(500).send(erro.message);
+    };
+}
+
+export async function UnpauseProductsDelete(req, res) {
+    const { id } = req.params;
+    try {
+
+        // verificando se a venda existe 
+        const saleExists = await getRequisitionProductsUsersId(id);
+
+        // verificando se a short é valida
+        if (saleExists.rows.length === 0) {
+            return res.status(404).send("Venda não encontrada");
+        };
+
+        // se tudo der certo
+        // atualizando o status
+        await deleteSendproductsId(id)
+        res.sendStatus(200);
+
+    } catch (erro) {
+        res.status(500).send(erro.message);
+    };
+}

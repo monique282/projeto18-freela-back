@@ -43,6 +43,26 @@ export async function getRequisitionProductsUsers(email) {
     return emailUserResult;
 };
 
+export async function sendSaleOpenUpdatStatusBreak(id) {
+    const serveSend = await db.query(`UPDATE products SET status = $1 WHERE id = $2`, ["false", id ])
+    return serveSend;
+};
+
+export async function sendSaleOpenUpdatStatusUnpause(id) {
+    const serveSend = await db.query(`UPDATE products SET status = $1 WHERE id = $2`, ["true", id ])
+    return serveSend;
+};
+
+export async function getRequisitionProductsUsersId(id) {
+    const emailUserResult = await db.query('SELECT * FROM products WHERE id = $1;', [id]);
+    return emailUserResult;
+};
+
+export async function deleteSendproductsId(id) {
+    const serveSend = await db.query(`DELETE FROM products WHERE id = $1;`, [id]);
+    return serveSend;
+};
+
 
 
 
@@ -64,8 +84,6 @@ export async function postRequisitionUrlsIdTableUsers(email) {
 
 
 
-
-
 export async function postSendUrlsIdTableShortuser(idUser, idUrls) {
     const serveSend = await db.query('INSERT INTO shortuser ( "userId" ,"shortId") VALUES ($1, $2)', [idUser, idUrls]);
     return serveSend;
@@ -79,7 +97,3 @@ export async function deleteRequisitionShortuserLink(user, id) {
 
 
 
-export async function deleteSendUrlsId(id) {
-    const serveSend = await db.query(`DELETE FROM urls WHERE id = $1;`, [id]);
-    return serveSend;
-};

@@ -1,19 +1,23 @@
 import { Router } from "express";
 import {
-    productCategoryPost, productsGet, productsIdGet,
-    productsSoldByUserGet, usersLoggedDelete
+    UnpauseProductsDelete, pauseUnpauseSaleBreak,
+    pauseUnpauseSaleUnpause, productCategoryPost,
+    productsGet, productsIdGet,
+    productsSoldByUserGet
 }
     from "../controllers/controlProducts.js";
 
 
 
-const urlRouter = Router();
+const productsRouter = Router();
 
-urlRouter.get("/filtering/:param", productCategoryPost);
-urlRouter.get("/products", productsGet);
-urlRouter.get("/products/:id", productsIdGet);
-urlRouter.get("/product/", productsSoldByUserGet);
-urlRouter.delete("/logout", usersLoggedDelete);
+productsRouter.get("/filtering/:param", productCategoryPost);
+productsRouter.get("/productUsers", productsSoldByUserGet);
+productsRouter.get("/products", productsGet);
+productsRouter.get("/products/:id", productsIdGet);
+productsRouter.delete("/productDelete/:id", UnpauseProductsDelete);
+productsRouter.get("/productBreak/:id", pauseUnpauseSaleBreak);
+productsRouter.get("/productUnpause/:id", pauseUnpauseSaleUnpause);
 
 
-export default urlRouter;
+export default productsRouter;
