@@ -1,13 +1,18 @@
 import { Router } from "express";
-import { productsGet, productsIdGet, urlsPost, usersLoggedDelete } from "../controllers/controlProducts.js";
+import {
+    productCategoryPost, productsGet, productsIdGet,
+    productsSoldByUserGet, usersLoggedDelete
+}
+    from "../controllers/controlProducts.js";
 
 
 
 const urlRouter = Router();
 
-urlRouter.post("/filtering", urlsPost);
+urlRouter.get("/filtering/:param", productCategoryPost);
 urlRouter.get("/products", productsGet);
 urlRouter.get("/products/:id", productsIdGet);
+urlRouter.get("/products/", productsSoldByUserGet);
 urlRouter.delete("/logout", usersLoggedDelete);
 
 

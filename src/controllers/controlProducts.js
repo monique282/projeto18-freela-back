@@ -1,9 +1,10 @@
 import { nanoid } from 'nanoid';
 import {
-     deleteSendUserLoggedToken, getRequisitionProductIdTableProductsJoinUsers,
-    getRequisitionProducts,postRequisitionValidateToken,
-    postSendUrlsIdTableUsers
+    deleteSendUserLoggedToken, getRequisitionProductIdTableProductsJoinUsers,
+    getRequisitionProducts, getRequisitionProductsUsers, getRequisitionValidateToken,
+    getSendProductsParamTableProducts, postRequisitionValidateToken
 } from '../repository/repositoryProducts.js';
+import { postRequisitionLogin } from '../repository/repositoryUsers.js';
 
 // função que pega todos os produtos
 export async function productsGet(req, res) {
@@ -76,7 +77,7 @@ export async function usersLoggedDelete(req, res) {
 }
 
 // função que filtra as postagens por categoria
-export async function urlsPost(req, res) {
+export async function productCategoryPost(req, res) {
 
     // pegando os dados enviado pelo usuario parames
     const { param } = req.params;
@@ -84,14 +85,42 @@ export async function urlsPost(req, res) {
     try {
 
         // enviando os dados para o servidor
-        await postSendUrlsIdTableUsers(shortUrl, url);
+        const productCategoria = await getSendProductsParamTableProducts(param);
 
-        return res.status(201).send({ "id": idUrls.rows[0].id, "shortUrl": shortUrl });
+        return res.status(201).send(productCategoria.rows);
 
     } catch (erro) {
         res.status(500).send(erro.message);
     };
 }
 
+// função que mostra os produto pelo id
+export async function productsSoldByUserGet(req, res) {
+    
+    // pegando os dados do token
+     const { authorization } = req.headers;
+     const token = authorization?.replace("Bearer ", "")
+
+    try {
+
+        // pegas as informações do usuario pelo token
+        const thereIsAUserToken = await getRequisitionValidateToken(token);
+
+        // verificando se o usuario é valido
+        if (thereIsAUserToken.rows.length === 0) {
+            return res.status(404).send("Usuario não altorizado");
+        };
+
+        // pegar as postagens que o usuario fez
+        const userProducts = await getRequisitionProductsUsers(thereIsAUserToken.rows[0].email);
+
+        // se tudo der certo
+        // enviar a venda
+        return res.status(200).send(userProducts)
+
+    } catch (erro) {
+        res.status(500).send(erro.message);
+    };
+}
 
 

@@ -28,15 +28,20 @@ export async function deleteSendUserLoggedToken(token) {
     return serveSend;
 };
 
-export async function postSendProductsParamTableProducts(param) {
+export async function getSendProductsParamTableProducts(param) {
     const serveSend = await db.query('SELECT * FROM products WHERE category = $1;', [param]);
     return serveSend;
 };
 
+export async function getRequisitionValidateToken(token) {
+    const userLogeedResult = await db.query('SELECT * FROM userslogged WHERE token = $1;', [token]);
+    return userLogeedResult;
+};
 
-
-
-
+export async function getRequisitionProductsUsers(email) {
+    const emailUserResult = await db.query('SELECT * FROM products WHERE idseler = $1;', [email]);
+    return emailUserResult;
+};
 
 
 

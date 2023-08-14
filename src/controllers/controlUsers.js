@@ -104,10 +104,11 @@ export async function loginPost(req, res) {
 
         // gernado o token
         const token = uuid();
-
+        console.log(token)
         // enviar os dados pro servidor pra quando o cadastro der certo
         await postRequisitionLoginSend(emailExistsQuery.rows[0].name, email, token);
         return res.status(200).send({ name: emailExistsQuery.rows[0].name, token });
+       
 
     } catch (erro) {
         res.status(500).send(erro.message);
