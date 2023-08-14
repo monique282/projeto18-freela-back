@@ -71,25 +71,3 @@ export async function postSendUrlsIdTableShortuser(name, description, price, cat
 
 
 
-
-
-
-export async function getSendProcustId(visitCount, shortUrl) {
-    const serveSend = await db.query(`UPDATE urls SET "visitCount" = $1 WHERE "shortUrl" = $2`, [visitCount, shortUrl])
-    return serveSend;
-};
-
-
-export async function postRequisitionUrlsIdTableUsers(email) {
-    const idUserResult = await db.query('SELECT * FROM users WHERE email = $1;', [email]);
-    return idUserResult;
-};
-
-
-export async function deleteRequisitionShortuserLink(user, id) {
-    const shortUrlResult = await db.query(`SELECT * FROM shortuser WHERE "userId" = $1 AND "shortId" = $2;`, [user, id]);
-    return shortUrlResult;
-};
-
-
-
