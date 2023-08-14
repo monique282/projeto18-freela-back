@@ -44,12 +44,12 @@ export async function getRequisitionProductsUsers(email) {
 };
 
 export async function sendSaleOpenUpdatStatusBreak(id) {
-    const serveSend = await db.query(`UPDATE products SET status = $1 WHERE id = $2`, ["false", id ])
+    const serveSend = await db.query(`UPDATE products SET status = $1 WHERE id = $2`, ["false", id])
     return serveSend;
 };
 
 export async function sendSaleOpenUpdatStatusUnpause(id) {
-    const serveSend = await db.query(`UPDATE products SET status = $1 WHERE id = $2`, ["true", id ])
+    const serveSend = await db.query(`UPDATE products SET status = $1 WHERE id = $2`, ["true", id])
     return serveSend;
 };
 
@@ -64,7 +64,10 @@ export async function deleteSendproductsId(id) {
 };
 
 
-
+export async function postSendUrlsIdTableShortuser(name, description, price, category, photo, email) {
+    const serveSend = await db.query('INSERT INTO products ( name ,idseler, category,description, photo, price) VALUES ($1, $2, $3, $4, $5, $6)', [name, email, category, description, photo, price]);
+    return serveSend;
+};
 
 
 
@@ -80,13 +83,6 @@ export async function getSendProcustId(visitCount, shortUrl) {
 export async function postRequisitionUrlsIdTableUsers(email) {
     const idUserResult = await db.query('SELECT * FROM users WHERE email = $1;', [email]);
     return idUserResult;
-};
-
-
-
-export async function postSendUrlsIdTableShortuser(idUser, idUrls) {
-    const serveSend = await db.query('INSERT INTO shortuser ( "userId" ,"shortId") VALUES ($1, $2)', [idUser, idUrls]);
-    return serveSend;
 };
 
 

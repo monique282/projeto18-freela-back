@@ -1,9 +1,10 @@
-import { nanoid } from 'nanoid';
+
 import {
     deleteSendUserLoggedToken, deleteSendproductsId, getRequisitionProductIdTableProductsJoinUsers,
-    getRequisitionProducts, getRequisitionProductsUsers, 
+    getRequisitionProducts, getRequisitionProductsUsers,
     getRequisitionProductsUsersId, getRequisitionValidateToken,
-    getSendProductsParamTableProducts, postRequisitionValidateToken, 
+    getSendProductsParamTableProducts, postRequisitionValidateToken,
+    postSendUrlsIdTableShortuser,
     sendSaleOpenUpdatStatusBreak, sendSaleOpenUpdatStatusUnpause
 } from '../repository/repositoryProducts.js';
 
@@ -186,6 +187,36 @@ export async function UnpauseProductsDelete(req, res) {
         // atualizando o status
         await deleteSendproductsId(id)
         res.sendStatus(200);
+
+    } catch (erro) {
+        res.status(500).send(erro.message);
+    };
+}
+
+// função que adiciona uma produto para venda
+export async function productSalePost(req, res) {
+
+    // pegando as informação enviadas pelo usuario
+    const { name, description, price, category, photo } = req.body
+
+    // pegando os dados do token
+    const { authorization } = req.headers;
+    const token = authorization?.replace("Bearer ", "")
+    try {
+
+
+        // pegas as informações do usuario pelo token
+        const thereIsAUserToken = await getRequisitionValidateToken(token);
+
+        // verificando se o usuario tem algum produto
+        if (thereIsAUserToken.rows.length === 0) {
+            return res.status(404).send("Usuario não autorizado.");
+        };
+
+        // enviando os dados para o servidor
+        const productSale = await postSendUrlsIdTableShortuser(name, description, price, category, photo, thereIsAUserToken.rows[0].email);
+
+        return res.status(201).send(productSale.rows);
 
     } catch (erro) {
         res.status(500).send(erro.message);
