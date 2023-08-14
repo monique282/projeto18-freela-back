@@ -94,7 +94,7 @@ export async function productCategoryPost(req, res) {
     };
 }
 
-// função que mostra os produto pelo id
+// função que mostra os produto do usuario
 export async function productsSoldByUserGet(req, res) {
     
     // pegando os dados do token
@@ -106,9 +106,9 @@ export async function productsSoldByUserGet(req, res) {
         // pegas as informações do usuario pelo token
         const thereIsAUserToken = await getRequisitionValidateToken(token);
 
-        // verificando se o usuario é valido
+        // verificando se o usuario tem algum produto
         if (thereIsAUserToken.rows.length === 0) {
-            return res.status(404).send("Usuario não altorizado");
+            return res.status(404).send("Nenhum produto cadastrado.");
         };
 
         // pegar as postagens que o usuario fez

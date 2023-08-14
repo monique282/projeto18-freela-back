@@ -1,7 +1,12 @@
 import { db } from '../database/database.connection.js';
 
-export async function postRequisitionRegister(email) {
+export async function postRequisitionRegisterEmail(email) {
     const existingUserResult = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    return existingUserResult;
+};
+
+export async function postRequisitionRegisterCpf(cpf) {
+    const existingUserResult = await db.query('SELECT * FROM users WHERE cpf = $1', [cpf]);
     return existingUserResult;
 };
 

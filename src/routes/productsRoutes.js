@@ -12,7 +12,7 @@ const urlRouter = Router();
 urlRouter.get("/filtering/:param", productCategoryPost);
 urlRouter.get("/products", productsGet);
 urlRouter.get("/products/:id", productsIdGet);
-urlRouter.get("/products/", productsSoldByUserGet);
+urlRouter.get("/product/", productsSoldByUserGet);
 urlRouter.delete("/logout", usersLoggedDelete);
 
 
